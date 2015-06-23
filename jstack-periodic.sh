@@ -10,7 +10,7 @@ get_jstack()
  echo "Get Jstack O/P of $pid pid for every $periodicity secs of $samples samples and write O/P under $location "
  newlocation="$location/$pid"
  echo "Creating new $pid dir under $location to store Jstack output"
- mkdir -f "$newlocation"
+ mkdir -p "$newlocation"
 
  i=1
  while [ "$i" -le "$samples" ]; do
