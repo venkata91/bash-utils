@@ -7,6 +7,29 @@ als () {
 
 alias ll="ls -l"
 alias ls='ls -G'
+alias staging='ssh -A vsowrirajan@admin.staging.qubole.net'
+alias nandi='ssh -A vsowrirajan@nandi2.prod.qubole.net'
+alias sparkbuild='ssh -A vsowrirajan@admin.staging.qubole.net -t "ssh -A build2 -t "tmux new-session -A -s vsowrirajan"; fixssh"'
+alias soc2='ssh -A vsowrirajan@prod-login1.us-east.aws.qubole.net'
+alias azureqa='ssh -A vsowrirajan@stg-login1.us-east.aws.qubole.net'
+alias azureprod='ssh -A vsowrirajan@prod-login1.us-east.aws.qubole.net'
+
+alias readlink=greadlink
+alias dirname=grealpath
+export HADOOP_HOME=/usr/lib/hadoop2/
+export HIVE_HOME=/usr/lib/hive1.2/
+export MAVEN_HOME=/usr/local/apache-maven-3.3.9/
+eval `ssh-agent -s`
+ssh-add ~/.ssh/id_rsa
+
+#Set Java Home 
+use-java () {
+    export JAVA_HOME=`/usr/libexec/java_home -v 1.$1`
+}
+
+socks5 () {
+    ssh -D 8123 -f -C -q -N vsowrirajan@nandi2.prod.qubole.net
+}
 
 #Finds a class from a bunch of jars
 function findjar {
@@ -112,4 +135,20 @@ function archive {
  fi
  }
 
- 
+# Add phantomjs to Path
+export PATH=$PATH:/usr/local/bin/phantomjs/bin
+
+# Add Maven to Path
+export PATH=$PATH:$MAVEN_HOME/bin
+
+# Add Hadoop bin/ directory to PATH
+export PATH=$PATH:$HADOOP_HOME/bin
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+export CPPFLAGS=-I/usr/local/opt/openssl/include
+export LDFLAGS=-L/usr/local/opt/openssl/lib
+export OPENSSL_ROOT_DIR="/usr/local/Cellar/openssl/1.0.2l/"
+export SPARK_HOME=/usr/lib/spark
+export PATH=$SPARK_HOME/bin:$PATH
+

@@ -20,5 +20,39 @@ complete -W "$(while read line; do echo ${line%%[, ]*}; done < ~/.ssh/known_host
 # curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ~/.git-completion.bash
 test -f ~/.git-completion.bash && . $_
 
+# start ssh agent during the mac bootup
+SSH_ENV="$HOME/.ssh/environment"
+
+function start_agent {
+    echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    echo succeeded
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add;
+}
+
+# Source SSH settings, if applicable
+
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    #ps ${SSH_AGENT_PID} doesn't work under cywgin
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent;
+    }
+else
+    start_agent;
+fi
+
 source ~/.bashrc
 source ~/.profile
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/venkat/Downloads/google/google-cloud-sdk/path.bash.inc' ]; then source '/Users/venkat/Downloads/google/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/venkat/Downloads/google/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/venkat/Downloads/google/google-cloud-sdk/completion.bash.inc'; fi
+export PATH="/usr/local/opt/openssl/bin:$PATH"
